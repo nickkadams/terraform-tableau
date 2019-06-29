@@ -1,11 +1,14 @@
-# Terraform Tableau with Ansible
-Terraform Tableau for RHEL 7
+# Terraform Tableau with vSphere provider
+Terraform Tableau
 
-- AWS provider
+## You will need to update for your environment.
 ```
-coming soon
+cp example-tfvars.txt terraform.tfvars
+cp example-variables.txt variables.tf
 ```
-- vSphere provider
+## Commands:
 ```
-cd vsphere
+terraform init
+terraform plan
+terraform apply
 ```

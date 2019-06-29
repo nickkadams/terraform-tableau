@@ -125,10 +125,4 @@ resource "vsphere_virtual_machine" "vm" {
   provisioner "local-exec" {
     command = "ansible-playbook --ssh-extra-args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' -u ${var.ssh_user} --private-key ~/.ssh/id_rsa -i ../ansible/inventory ../ansible/playbook.yml"
   }
-
-  provisioner "local-exec" {
-    command = "echo 'Login as ${var.ssh_user} to https://${var.vm_name}${count.index + 1}.${var.vm_domain}:8850'"
-  }
-
-
 }
