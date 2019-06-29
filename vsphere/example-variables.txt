@@ -1,0 +1,15 @@
+variable "vm_mac_address" {
+  default = {
+    mac_address1 = "00:00:00:00:00:00"
+    mac_address2 = "00:00:00:00:00:00"
+    mac_address3 = "00:00:00:00:00:00"
+  }
+}
+
+variable "vm_ip_address" {
+  default = {
+    ip_address1 = "192.168.1.101"
+    ip_address2 = "192.168.1.102"
+    ip_address3 = "192.168.1.103"    
+  }
+}

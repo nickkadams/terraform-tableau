@@ -1,9 +1,25 @@
-#  Local .terraform directories
-**/.terraform/*
+# MacOS
+.DS_Store
 
-# .tfstate files
+# Compiled files
 *.tfstate
-*.tfstate.*
+*.tfstate.backup
+
+# Module directory
+.terraform/
+
+# Lock file
+.terraform.tfstate.lock.info
 
 # .tfvars files
 *.tfvars
+
+# variables.tf
+variables.tf
+
+# Ansible retry
+*.retry
+
+# Tableau installers
+*.rpm
+*.deb

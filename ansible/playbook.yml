@@ -1,0 +1,107 @@
+---
+- hosts: tableau_instances
+  become: yes
+  vars_files:
+    - "vars/main.yml"
+    #- "vars/{{ ansible_os_family }}.yml"
+
+  tasks:
+    - name: Create xfs filesystem on /dev/sdb
+      filesystem:
+        fstype: xfs
+        dev: /dev/sdb
+        #force: yes
+
+    - name: Create tableau dir
+      file:
+        path: "{{ tableau_base_dir }}"
+        state: directory
+        mode: 0755
+
+    - name: Mount tableau dir
+      mount:
+        path: "{{ tableau_base_dir }}"
+        src: /dev/sdb
+        fstype: xfs
+        state: mounted
+
+    - name: Add tableau user
+      user:
+        name: tableau
+        comment: Tableau Server
+        shell: /bin/bash
+
+    - name: Change {{ tableau_base_dir }} owner
+      file:
+        path: "{{ tableau_base_dir }}"
+        owner: tableau
+        group: tableau
+        recurse: yes
+
+    - name: Install tableau dependencies
+      package:
+        state: latest
+        name:
+          - fontconfig
+          - gdb
+          - freeglut
+          - libXcomposite
+          - libXrender
+          - mesa-libEGL
+          - chrpath
+          - java-headless
+
+    # https://www.tableau.com/support/releases/server
+    # - name: Download tableau-server
+    #   get_url:
+    #     url: https://downloads.tableau.com/esdalt/2019.2.1/tableau-server-2019-2-1.x86_64.rpm
+    #     dest: /home/ansible
+    #     mode: '0640'
+    #
+    # - name: Download tableau-tabcmd
+    #   get_url:
+    #     url: https://downloads.tableau.com/esdalt/2019.2.1/tableau-tabcmd-2019-2-1.noarch.rpm
+    #     dest: /home/ansible
+    #     mode: '0640'
+    
+    - name: Install tableau-server
+      yum:
+        name: tableau-server-2019-2-1.x86_64.rpm
+        state: present
+
+    - name: Install tableau-tabcmd
+      yum:
+        name: tableau-tabcmd-2019-2-1.noarch.rpm
+        state: present
+
+    - name: Run setup script
+      command: sh /opt/tableau/tableau_server/packages/scripts.20192.19.0621.1547/initialize-tsm --accepteula
+
+    - name: Enable ssh firewalld
+      firewalld:
+        service: ssh
+        permanent: true
+        state: enabled
+
+    - name: Enable http firewalld
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+
+    - name: Enable https firewalld
+      firewalld:
+        service: https
+        permanent: true
+        state: enabled
+
+    - name: Enable tableau-admin firewalld
+      firewalld:
+        port: 8850/tcp
+        permanent: true
+        state: enabled
+
+    - name: Reload service firewalld
+      systemd:
+        name: firewalld
+        state: reloaded
