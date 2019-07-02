@@ -27,7 +27,7 @@ cd vsphere
 openssl req -x509 -days 365 -newkey rsa:4096 \
 -keyout tableau1.example.com.key.pass \
 -out tableau1.example.com.crt \
--subj "/C=US/ST=VA/L=Reston/O=Leidos/OU=ECM/CN=tableau1.example.com"
+-subj "/C=US/ST=NC/L=Charlotte/O=Example/OU=IT/CN=tableau1.example.com"
 
 openssl rsa -in tableau1.example.com.key.pass -out tableau1.example.com.key
 
